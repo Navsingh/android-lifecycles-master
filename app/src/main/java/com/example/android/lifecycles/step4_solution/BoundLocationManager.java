@@ -28,7 +28,8 @@ import android.util.Log;
 
 public class BoundLocationManager {
     public static void bindLocationListenerIn(LifecycleOwner lifecycleOwner,
-                                              LocationListener listener, Context context) {
+                                              LocationListener listener, Context context)
+    {
         new BoundLocationListener(lifecycleOwner, listener, context);
     }
 

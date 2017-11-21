@@ -15,48 +15,51 @@
  */
 
 package com.example.android.lifecycles.step5;
-
-
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
-
 import com.example.android.codelabs.lifecycle.R;
-
 /**
  * Shows a SeekBar that should be synced with a value in a ViewModel.
  */
-public class Fragment_step5 extends Fragment {
-
+public class Fragment_step5 extends Fragment
+{
     private SeekBar mSeekBar;
-
     private SeekBarViewModel mSeekBarViewModel;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle savedInstanceState)
+    {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_step5, container, false);
         mSeekBar = root.findViewById(R.id.seekBar);
 
         // TODO: get ViewModel
+        mSeekBarViewModel = ViewModelProviders.of(getActivity()).get(SeekBarViewModel.class);
         subscribeSeekBar();
-
         return root;
     }
 
-    private void subscribeSeekBar() {
+    private void subscribeSeekBar()
+    {
 
         // Update the ViewModel when the SeekBar is changed.
 
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
+            {
                 // TODO: Set the ViewModel's value when the change comes from the user.
-            }
+                if(fromUser)
+                {
+                    mSeekBarViewModel.seekbarValue.setValue(progress);
+                }
+                }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) { }
@@ -66,6 +69,16 @@ public class Fragment_step5 extends Fragment {
         });
 
         // TODO: Update the SeekBar when the ViewModel is changed.
+            mSeekBarViewModel.seekbarValue.observe(getActivity(), new android.arch.lifecycle.Observer<Integer>() {
+                @Override
+                public void onChanged(@Nullable Integer integer)
+                {
+                    if(integer!=null)
+                    {
+                        mSeekBar.setProgress(integer);
+                    }
+                }
+            });
         // mSeekBarViewModel.seekbarValue.observe(...
     }
 }
